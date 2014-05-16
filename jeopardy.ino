@@ -15,15 +15,16 @@
 const int leds[] = {bluePin1,greenPin1,redPin1,bluePin2}; //should contain only LED_COUNT elements
 const int buttons[] = {button1Pin,button2Pin,button3Pin,button4Pin}; //should contain only BUTTON_COUNT elements
 const char letters[] = "abcd";
+boolean buttonWasPressed[] = {false,false,false,false}; //should contain only BUTTON_COUNT elements
+int i;
 
-void setup()   {
+void setup() {
   pinMode(on_board_LED, OUTPUT);
   
-  int i;
   for(i=0; i<LED_COUNT;i++) {
     pinMode(leds[i], OUTPUT);
   }
-  for(i=0;i<BUTTON_COUNT;i++){
+  for(i=0;i<BUTTON_COUNT;i++) {
     pinMode(buttons[i], INPUT_PULLUP);
   }
 
@@ -40,27 +41,24 @@ void setup()   {
   digitalWrite(on_board_LED, 1);
 }
 
-boolean buttonWasPressed[] = {false,false,false,false}; //should contain only BUTTON_COUNT elements
-int i;
-
-void loop(){
-  for(i=0;i<BUTTON_COUNT;i++){
-    if(digitalRead(buttons[i]) == HIGH){//button NOT pressed
-      if(buttonWasPressed[i] == true){//released
+void loop() {
+  for(i=0;i<BUTTON_COUNT;i++) {
+    if(digitalRead(buttons[i]) == HIGH) { //button NOT pressed
+      if(buttonWasPressed[i] == true) { //released
         digitalWrite(leds[i], !digitalRead(leds[i]));
-        delay(12);
+        delay(12); //blocking debounce
       }
       else { //still NOT pressed
       }
       buttonWasPressed[i] = false;
     }
-    else {//button IS pressed
-      if(buttonWasPressed[i] == false){//pressed
-        Keyboard.print(letters[i]);
+    else { //button IS pressed
+      if(buttonWasPressed[i] == false) { //pressed
+        Keyboard.print(letters[i]); //send respective character
         digitalWrite(leds[i], !digitalRead(leds[i]));
-        delay(12);
+        delay(12); //blocking debounce
       }
-      else{ //button kept pressed
+      else { //button kept pressed
       }
       buttonWasPressed[i] = true;
     }
